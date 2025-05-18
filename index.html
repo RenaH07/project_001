@@ -13,10 +13,11 @@
 <body>
 
   <!-- ✅ Netlify Forms用フォーム -->
-  <form name="experiment-data" netlify>
-    <input type="hidden" name="data" id="data-field" />
-    <button type="submit" style="display: none;">送信</button>
-  </form>
+  <form name="experiment-data" id="experiment-form" netlify>
+  <input type="hidden" name="data" id="data-field" />
+  <button type="submit" style="display: none;">送信</button>
+</form>
+
 
   <!-- ✅ JavaScriptはフォームのあとで読み込む -->
   <script src="my_experiment.js"></script>

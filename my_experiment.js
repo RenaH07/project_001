@@ -165,22 +165,23 @@ jsPsych.init({
       responses: responses
     };
 
-    console.log("送信データ:", dataToSend);
+  console.log("送信データ:", dataToSend);
 
-    // 🔁 確実にフォームが読み込まれたあとに送信
-    function waitForFormAndSubmit(dataToSend, attempts = 10) {
-      const field = document.getElementById("data-field");
+function waitForFormAndSubmit(dataToSend, attempts = 10) {
+  const field = document.getElementById("data-field");
+  const form = document.getElementById("experiment-form");
 
-      if (field) {
-        field.value = JSON.stringify(dataToSend);
-        document.querySelector("form[name='experiment-data']").submit();
-      } else if (attempts > 0) {
-        setTimeout(() => waitForFormAndSubmit(dataToSend, attempts - 1), 100);
-      } else {
-        console.error("フォームの input[data-field] が見つかりませんでした！");
-      }
-    }
+  if (field && form) {
+    field.value = JSON.stringify(dataToSend);
+    form.submit();
+  } else if (attempts > 0) {
+    setTimeout(() => waitForFormAndSubmit(dataToSend, attempts - 1), 100);
+  } else {
+    console.error("フォームまたは input[data-field] が見つかりませんでした！");
+  }
+}
 
-    waitForFormAndSubmit(dataToSend);
+waitForFormAndSubmit(dataToSend);
+
   }
 });
