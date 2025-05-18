@@ -4,27 +4,20 @@
   <meta charset="utf-8">
   <title>かわいさ予備調査</title>
 
+  <!-- jsPsych関係の読み込み -->
   <script src="jspsych.js"></script>
   <link href="jspsych.css" rel="stylesheet">
   <script src="plugins/jspsych-html-button-response.js"></script>
   <script src="plugins/jspsych-survey-likert.js"></script>
   <script src="plugins/jspsych-survey-html-form.js"></script>
 
-  <!-- ✅ jsPsychが書き換えるbodyよりも上のhead内にformを設置（見た目には出ない） -->
-  <style>
-    form#hidden-form { display: none; }
-  </style>
-
-  <!-- ✅ jsPsychによるDOMの書き換えを避けるため、head直下にformを置く -->
-  <form id="hidden-form" name="experiment-data" method="POST" data-netlify="true" netlify>
-    <input type="hidden" name="data" id="data-field" />
-    <button type="submit" style="display: none;">送信</button>
+  <!-- ✅ Netlifyがフォームの存在を認識するためだけに必要な記述 -->
+  <form name="experiment-data" netlify hidden>
+    <input type="hidden" name="data">
   </form>
-
 </head>
 <body>
-
-  <!-- jsPsychの画面表示エリア -->
+  <!-- 実験の本体スクリプト -->
   <script src="my_experiment.js"></script>
 </body>
 </html>

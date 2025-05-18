@@ -143,7 +143,7 @@ jsPsych.init({
 
     const responses = [];
 
-    for (let i = 0; i < shuffledStimuli.length; i++) {
+    for (let i = 0; i < stimulusTrials.length - 1; i++) { // -1は「完了」ボタン分
       const stim_html = stimulusTrials[i].stimulus;
       const fileMatch = stim_html.match(/src="([^"]+)"/);
       const stimulusFile = fileMatch ? fileMatch[1] : `unknown_${i}`;
@@ -165,20 +165,20 @@ jsPsych.init({
       responses: responses
     };
 
-  console.log("送信データ:", dataToSend);
+    console.log("送信データ:", dataToSend);
 
-// ✅ 100ミリ秒だけ待ってからフォーム送信
-setTimeout(() => {
-  const field = document.getElementById("data-field");
-  const form = document.forms["experiment-data"];
-
-  if (field && form) {
-    field.value = JSON.stringify(dataToSend);
-    form.submit();
-  } else {
-    console.error("フォームまたは data-field が見つかりませんでした！");
-  }
-}, 100);
-
+    // ✅ Netlify Forms へfetchで送信（フォーム要素を使わない方法）
+    fetch("/", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        "form-name": "experiment-data",
+        "data": JSON.stringify(dataToSend)
+      })
+    }).then(() => {
+      console.log("Netlifyに送信完了！");
+    }).catch((error) => {
+      console.error("送信失敗:", error);
+    });
   }
 });
