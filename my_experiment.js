@@ -136,58 +136,42 @@ timeline.push({
 jsPsych.init({
   timeline: timeline,
   on_finish: function () {
-    const participantID = generateParticipantID();
+  const participantID = generateParticipantID();
 
-    const likertAll = jsPsych.data.get().filter({trial_type: 'survey-likert'}).values();
-    const stimulusTrials = jsPsych.data.get().filter({trial_type: 'html-button-response'}).values();
-    const background = jsPsych.data.get().filter({trial_type: 'survey-html-form'}).values()[0].response;
+  const likertAll = jsPsych.data.get().filter({trial_type: 'survey-likert'}).values();
+  const stimulusTrials = jsPsych.data.get().filter({trial_type: 'html-button-response'}).values();
+  const background = jsPsych.data.get().filter({trial_type: 'survey-html-form'}).values()[0].response;
 
-    const responses = [];
+  const responses = [];
 
-    for (let i = 0; i < shuffledStimuli.length; i++) {
-      const stim_html = stimulusTrials[i].stimulus;
-      const fileMatch = stim_html.match(/src="([^"]+)"/);
-      const stimulusFile = fileMatch ? fileMatch[1] : `unknown_${i}`;
+  for (let i = 0; i < shuffledStimuli.length; i++) {
+    const stim_html = stimulusTrials[i].stimulus;
+    const fileMatch = stim_html.match(/src="([^"]+)"/);
+    const stimulusFile = fileMatch ? fileMatch[1] : `unknown_${i}`;
 
-      responses.push({
-        stimulus: stimulusFile,
-        Q0: likertAll[i].response.Q0,
-        Q1: likertAll[i].response.Q1,
-        Q2: likertAll[i].response.Q2,
-        Q3: likertAll[i].response.Q3
-      });
-    }
-
-    const dataToSend = {
-      id: participantID,
-      age: background.age,
-      gender: background.gender,
-      has_children: background.has_children,
-      responses: responses
-    };
-
-    console.log("送信データ:", dataToSend);
-
-    fetch("https://script.google.com/macros/s/AKfycbwSj_bzmNjonvbL8Ws8bl6uRUB-Ju48GRCIcHnwOdTIfyF5NQ67WvNstHeRTALoFNup/exec", {
-  method: "POST",
-  mode: "cors", // ← これを明示するのがベター
-  headers: {
-    "Content-Type": "application/json"
-  },
-  body: JSON.stringify(dataToSend)
-})
-.then(response => {
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
+    responses.push({
+      stimulus: stimulusFile,
+      Q0: likertAll[i].response.Q0,
+      Q1: likertAll[i].response.Q1,
+      Q2: likertAll[i].response.Q2,
+      Q3: likertAll[i].response.Q3
+    });
   }
-  return response.json();
-})
-.then(data => {
-  console.log("Success:", data);
-})
-.catch(error => {
-  console.error("Fetch error:", error);
-});
+
+  const dataToSend = {
+    id: participantID,
+    age: background.age,
+    gender: background.gender,
+    has_children: background.has_children,
+    responses: responses
+  };
+
+  console.log("送信データ:", dataToSend);
+
+  // ✅ Netlify Forms へ送信！
+  document.getElementById("data-field").value = JSON.stringify(dataToSend);
+  document.querySelector("form[name='experiment-data']").submit();
+
 
   }
 });
