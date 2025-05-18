@@ -137,7 +137,6 @@ jsPsych.init({
   timeline: timeline,
   on_finish: function () {
   const participantID = generateParticipantID();
-
   const likertAll = jsPsych.data.get().filter({trial_type: 'survey-likert'}).values();
   const stimulusTrials = jsPsych.data.get().filter({trial_type: 'html-button-response'}).values();
   const background = jsPsych.data.get().filter({trial_type: 'survey-html-form'}).values()[0].response;
@@ -168,10 +167,9 @@ jsPsych.init({
 
   console.log("送信データ:", dataToSend);
 
-  // ✅ Netlify Forms へ送信！
+  // Netlifyに送信！
   document.getElementById("data-field").value = JSON.stringify(dataToSend);
   document.querySelector("form[name='experiment-data']").submit();
+}
 
-
-  }
 });
