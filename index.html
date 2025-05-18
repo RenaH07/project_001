@@ -12,11 +12,17 @@
 </head>
 <body>
 
-  <!-- 👇 ここにフォーム追加！ -->
+  <!-- Netlifyに認識させるためのフォームを追加！ -->
   <form name="experiment-data" netlify>
-    <input type="hidden" name="data" id="data-field">
-    <button type="submit" style="display: none;">送信</button>
+    <p>
+      <label>データ</label>
+      <input type="hidden" name="data" id="data-field" />
+    </p>
+    <p>
+      <button type="submit">送信</button>
+    </p>
   </form>
 
 </body>
+
 </html>
