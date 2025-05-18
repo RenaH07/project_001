@@ -10,5 +10,13 @@
   <script src="plugins/jspsych-survey-html-form.js"></script>
   <script src="my_experiment.js"></script>
 </head>
-<body></body>
+<body>
+
+  <!-- 👇 ここにフォーム追加！ -->
+  <form name="experiment-data" netlify>
+    <input type="hidden" name="data" id="data-field">
+    <button type="submit" style="display: none;">送信</button>
+  </form>
+
+</body>
 </html>
