@@ -165,17 +165,20 @@ jsPsych.init({
       responses: responses
     };
 
-    console.log("送信データ:", dataToSend);
+  console.log("送信データ:", dataToSend);
 
-    // ✅ HTMLにあるNetlifyフォームへデータを送信
-    const field = document.getElementById("data-field");
-    const form = document.forms["experiment-data"];
+// ✅ 100ミリ秒だけ待ってからフォーム送信
+setTimeout(() => {
+  const field = document.getElementById("data-field");
+  const form = document.forms["experiment-data"];
 
-    if (field && form) {
-      field.value = JSON.stringify(dataToSend);
-      form.submit();
-    } else {
-      console.error("フォームまたは data-field が見つかりませんでした！");
-    }
+  if (field && form) {
+    field.value = JSON.stringify(dataToSend);
+    form.submit();
+  } else {
+    console.error("フォームまたは data-field が見つかりませんでした！");
+  }
+}, 100);
+
   }
 });
