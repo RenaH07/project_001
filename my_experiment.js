@@ -167,15 +167,20 @@ jsPsych.init({
 
     console.log("送信データ:", dataToSend);
 
-    // Netlifyに送信！（0.1秒だけ遅らせてフォームを安全に読む）
-    setTimeout(() => {
+    // 🔁 確実にフォームが読み込まれたあとに送信
+    function waitForFormAndSubmit(dataToSend, attempts = 10) {
       const field = document.getElementById("data-field");
+
       if (field) {
         field.value = JSON.stringify(dataToSend);
         document.querySelector("form[name='experiment-data']").submit();
+      } else if (attempts > 0) {
+        setTimeout(() => waitForFormAndSubmit(dataToSend, attempts - 1), 100);
       } else {
         console.error("フォームの input[data-field] が見つかりませんでした！");
       }
-    }, 100);
+    }
+
+    waitForFormAndSubmit(dataToSend);
   }
 });
