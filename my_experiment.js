@@ -139,35 +139,38 @@ jsPsych.init({
     const participantID = generateParticipantID();
     const likertAll = jsPsych.data.get().filter({ trial_type: 'survey-likert' }).values();
     const stimulusTrials = jsPsych.data.get().filter({ trial_type: 'html-button-response' }).values();
-    const background = jsPsych.data.get().filter({ trial_type: 'survey-html-form' }).values()[0].response;
+
+    // ✅ background 質問がない場合の安全処理
+    const backgroundData = jsPsych.data.get().filter({ trial_type: 'survey-html-form' }).values();
+    const background = backgroundData.length > 0 ? backgroundData[0].response : {};
 
     const responses = [];
 
-    for (let i = 0; i < stimulusTrials.length - 1; i++) { // -1は「完了」ボタン分
+    for (let i = 0; i < stimulusTrials.length - 1; i++) { // -1は終了画面のぶんを除外
       const stim_html = stimulusTrials[i].stimulus;
       const fileMatch = stim_html.match(/src="([^"]+)"/);
       const stimulusFile = fileMatch ? fileMatch[1] : `unknown_${i}`;
 
       responses.push({
         stimulus: stimulusFile,
-        Q0: likertAll[i].response.Q0,
-        Q1: likertAll[i].response.Q1,
-        Q2: likertAll[i].response.Q2,
-        Q3: likertAll[i].response.Q3
+        Q0: likertAll[i]?.response?.Q0 ?? null,
+        Q1: likertAll[i]?.response?.Q1 ?? null,
+        Q2: likertAll[i]?.response?.Q2 ?? null,
+        Q3: likertAll[i]?.response?.Q3 ?? null
       });
     }
 
     const dataToSend = {
       id: participantID,
-      age: background.age,
-      gender: background.gender,
-      has_children: background.has_children,
+      age: background.age || null,
+      gender: background.gender || null,
+      has_children: background.has_children || null,
       responses: responses
     };
 
     console.log("送信データ:", dataToSend);
 
-    // ✅ Netlify Forms へfetchで送信（フォーム要素を使わない方法）
+    // ✅ Netlifyフォームへ送信（fetchを使った非表示送信）
     fetch("/", {
       method: "POST",
       headers: { "Content-Type": "application/x-www-form-urlencoded" },
@@ -175,9 +178,11 @@ jsPsych.init({
         "form-name": "experiment-data",
         "data": JSON.stringify(dataToSend)
       })
-    }).then(() => {
+    })
+    .then(() => {
       console.log("Netlifyに送信完了！");
-    }).catch((error) => {
+    })
+    .catch((error) => {
       console.error("送信失敗:", error);
     });
   }
