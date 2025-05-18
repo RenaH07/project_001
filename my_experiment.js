@@ -137,9 +137,9 @@ jsPsych.init({
   timeline: timeline,
   on_finish: function () {
     const participantID = generateParticipantID();
-    const likertAll = jsPsych.data.get().filter({trial_type: 'survey-likert'}).values();
-    const stimulusTrials = jsPsych.data.get().filter({trial_type: 'html-button-response'}).values();
-    const background = jsPsych.data.get().filter({trial_type: 'survey-html-form'}).values()[0].response;
+    const likertAll = jsPsych.data.get().filter({ trial_type: 'survey-likert' }).values();
+    const stimulusTrials = jsPsych.data.get().filter({ trial_type: 'html-button-response' }).values();
+    const background = jsPsych.data.get().filter({ trial_type: 'survey-html-form' }).values()[0].response;
 
     const responses = [];
 
@@ -165,23 +165,23 @@ jsPsych.init({
       responses: responses
     };
 
-  console.log("送信データ:", dataToSend);
+    console.log("送信データ:", dataToSend);
 
-function waitForFormAndSubmit(dataToSend, attempts = 10) {
-  const field = document.getElementById("data-field");
-  const form = document.getElementById("experiment-form");
+    // ✅ JavaScriptでフォームを作る！
+    const form = document.createElement("form");
+    form.setAttribute("name", "experiment-data");
+    form.setAttribute("method", "POST");
+    form.setAttribute("data-netlify", "true");
 
-  if (field && form) {
-    field.value = JSON.stringify(dataToSend);
+    const input = document.createElement("input");
+    input.setAttribute("type", "hidden");
+    input.setAttribute("name", "data");
+    input.setAttribute("value", JSON.stringify(dataToSend));
+
+    form.appendChild(input);
+    document.body.appendChild(form);
+
+    // ✅ 作ったフォームを送信！
     form.submit();
-  } else if (attempts > 0) {
-    setTimeout(() => waitForFormAndSubmit(dataToSend, attempts - 1), 100);
-  } else {
-    console.error("フォームまたは input[data-field] が見つかりませんでした！");
-  }
-}
-
-waitForFormAndSubmit(dataToSend);
-
   }
 });
