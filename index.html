@@ -3,24 +3,25 @@
 <head>
   <meta charset="utf-8">
   <title>かわいさ予備調査</title>
+
+  <!-- jsPsych本体とプラグイン -->
   <script src="jspsych.js"></script>
   <link href="jspsych.css" rel="stylesheet">
   <script src="plugins/jspsych-html-button-response.js"></script>
   <script src="plugins/jspsych-survey-likert.js"></script>
   <script src="plugins/jspsych-survey-html-form.js"></script>
-  <!-- ✅ my_experiment.js はここから削除 -->
 </head>
 <body>
 
-  <!-- ✅ Netlify Forms用フォーム -->
-  <form name="experiment-data" method="POST" data-netlify="true" netlify>
-  <input type="hidden" name="data" id="data-field" />
-  <button type="submit" style="display: none;">送信</button>
-</form>
+  <!-- ✅ jsPsychが消してしまわないよう、formをラップして隠す -->
+  <div id="form-wrapper" style="display: none;">
+    <form name="experiment-data" method="POST" data-netlify="true" netlify>
+      <input type="hidden" name="data" id="data-field" />
+      <button type="submit" style="display: none;">送信</button>
+    </form>
+  </div>
 
-
-  <!-- ✅ JavaScriptはフォームのあとで読み込む -->
+  <!-- ✅ 実験本体のスクリプトはこの下で読み込まれる -->
   <script src="my_experiment.js"></script>
 </body>
-
 </html>
