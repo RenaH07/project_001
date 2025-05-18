@@ -167,21 +167,15 @@ jsPsych.init({
 
     console.log("送信データ:", dataToSend);
 
-    // ✅ JavaScriptでフォームを作る！
-    const form = document.createElement("form");
-    form.setAttribute("name", "experiment-data");
-    form.setAttribute("method", "POST");
-    form.setAttribute("data-netlify", "true");
+    // ✅ HTMLにあるNetlifyフォームへデータを送信
+    const field = document.getElementById("data-field");
+    const form = document.forms["experiment-data"];
 
-    const input = document.createElement("input");
-    input.setAttribute("type", "hidden");
-    input.setAttribute("name", "data");
-    input.setAttribute("value", JSON.stringify(dataToSend));
-
-    form.appendChild(input);
-    document.body.appendChild(form);
-
-    // ✅ 作ったフォームを送信！
-    form.submit();
+    if (field && form) {
+      field.value = JSON.stringify(dataToSend);
+      form.submit();
+    } else {
+      console.error("フォームまたは data-field が見つかりませんでした！");
+    }
   }
 });
