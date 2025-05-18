@@ -3,28 +3,28 @@
 <head>
   <meta charset="utf-8">
   <title>かわいさ予備調査</title>
+
   <script src="jspsych.js"></script>
   <link href="jspsych.css" rel="stylesheet">
   <script src="plugins/jspsych-html-button-response.js"></script>
   <script src="plugins/jspsych-survey-likert.js"></script>
   <script src="plugins/jspsych-survey-html-form.js"></script>
 
-  <!-- ✅ フォームをここ（headの直後）に出すことでjsPsychの影響を受けない -->
+  <!-- ✅ jsPsychが書き換えるbodyよりも上のhead内にformを設置（見た目には出ない） -->
   <style>
-    #form-wrapper { display: none; }
+    form#hidden-form { display: none; }
   </style>
+
+  <!-- ✅ jsPsychによるDOMの書き換えを避けるため、head直下にformを置く -->
+  <form id="hidden-form" name="experiment-data" method="POST" data-netlify="true" netlify>
+    <input type="hidden" name="data" id="data-field" />
+    <button type="submit" style="display: none;">送信</button>
+  </form>
+
 </head>
 <body>
 
-  <!-- ✅ フォームは jsPsychが上書きしない位置に置く -->
-  <div id="form-wrapper">
-    <form name="experiment-data" method="POST" data-netlify="true" netlify>
-      <input type="hidden" name="data" id="data-field" />
-      <button type="submit" style="display: none;">送信</button>
-    </form>
-  </div>
-
-  <!-- ✅ 実験の実行 -->
+  <!-- jsPsychの画面表示エリア -->
   <script src="my_experiment.js"></script>
 </body>
 </html>
